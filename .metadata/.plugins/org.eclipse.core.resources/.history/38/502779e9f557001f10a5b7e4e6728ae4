@@ -7,9 +7,9 @@ void PORTF_Init()
     while ((SYSCTL_PRGPIO_R & 0x20) == 0);
 }
 
-void PORTF_LEDs_Init(void) //Initialize lEDs as GPIO
+void PORTF_LEDs_Init(void) //Init leds as GPIO
 {
-    // Configure the Board LEDs
+    // Configure the Board Leds
     PORTF_Init();
     // Turn off Alternate Function
     GPIO_PORTF_AFSEL_R &= 0xF1;

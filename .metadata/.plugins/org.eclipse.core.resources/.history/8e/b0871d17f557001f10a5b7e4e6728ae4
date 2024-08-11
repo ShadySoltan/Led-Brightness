@@ -4,12 +4,15 @@ void PORTF_Init()
 {
     // Turn on Clock
     SYSCTL_RCGCGPIO_R = 0x20;
+
     while ((SYSCTL_PRGPIO_R & 0x20) == 0);
 }
 
-void PORTF_LEDs_Init(void) //Initialize lEDs as GPIO
+
+
+void PORTF_LEDs_Init(void)
 {
-    // Configure the Board LEDs
+    // Configure the Board Leds
     PORTF_Init();
     // Turn off Alternate Function
     GPIO_PORTF_AFSEL_R &= 0xF1;
@@ -27,9 +30,5 @@ void PORTF_LEDs_Init(void) //Initialize lEDs as GPIO
 
 int main(void)
 {
-    PORTF_LEDs_Init();
-	while(1)
-	{
-	    GPIO_PORTF_DATA_R |= 0xF8;
-	}
+	return 0;
 }

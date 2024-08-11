@@ -1,0 +1,32 @@
+#include "tm4c123gh6pm.h"
+
+void PORTF_Init()
+{
+    // Turn on Clock
+    GPIO_PORTF_RCGCGPIO_REG = 0x20;
+
+    while ((PORTF_PRGPIO & 0x20) == 0);
+}
+
+void PORTF_LEDs_Init(void)
+{
+    // Configure the Board Leds
+    PORTF_Init();
+    // Turn off Alternate Function
+    PORTF_AFSEL_REG &= 0xF1;
+    // Turn off Analog Mode
+    PORTF_AMSEL_REG &= 0xF1;
+    // Configure all three pins as output
+    PORTF_DIR_REG |= 0x0E;
+    // Choose GPIO mode for the three pins
+    PORTF_PCTL_REG &= 0xFFFF000F;
+    // Enable pins
+    PORTF_DEN_REG |= 0x0E;
+    // Turn off pins
+    PORTF_DATA_REG &= 0xF1;
+}
+
+int main(void)
+{
+	return 0;
+}

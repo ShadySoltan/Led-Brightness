@@ -30,6 +30,6 @@ int main(void)
     PORTF_LEDs_Init();
 	while(1)
 	{
-	    GPIO_PORTF_DATA_R |= 0xF8;
+
 	}
 }
