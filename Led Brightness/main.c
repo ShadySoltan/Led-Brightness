@@ -3,7 +3,7 @@
 //Configure PWM module 1 channel 6 for the blue led pin PF2
 void PWM1_CH6_PF2(void)
 {
-    //Enable PWm1 module clock
+    //Enable PWM1 module clock
     SYSCTL_RCGCPWM_R |= (1<<1);
 
     //Enable Clock for PORTF
@@ -78,8 +78,3 @@ void APP1(void) //Turning the blue led off and on in a smooth way by varying bri
     }
 }
 
-
-void main(void)
-{
-    APP1();
-}
