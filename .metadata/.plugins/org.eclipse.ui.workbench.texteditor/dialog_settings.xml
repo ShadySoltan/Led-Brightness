@@ -6,11 +6,13 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="PORTF_INIT();"/>
+		<item key="selection" value="10000"/>
 		<list key="findhistory">
+			<item value="100000"/>
 			<item value="PORTF_Init();"/>
 		</list>
 		<list key="replacehistory">
+			<item value="10000"/>
 			<item value="PORTF_INIT();"/>
 		</list>
 	</section>

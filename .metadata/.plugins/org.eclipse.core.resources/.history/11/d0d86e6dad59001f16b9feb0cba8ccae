@@ -36,16 +36,16 @@ PWM1_CH567_INIT(void)
     PWM1_3_CMPA_R = 0;
     PWM1_2_CMPA_R = 0;
 
-    //When the PWM timer starts counting from 1600 it drives the PF1 PF2 PF3 to high
+    //When the PWM timer starts counting from 1600 it drives the PF2 to high
     PWM1_3_GENA_R |= (1<<2) | (1<<3);
     PWM1_3_GENB_R |= (1<<2) | (1<<3);
-    PWM1_2_GENB_R |= (1<<2) | (1<<3);
 
-    //When the counter reaches the compartorA it will drive the pins to low
+    //When the counter reaches the compartorA it will drive the pin to low
     PWM1_3_GENA_R &= ~(1<<6);
-    PWM1_3_GENA_R |= (1<<7);
+    PWM1_3_GENA_R |= (1<<7); //Writing the value of 0x2 to bits 6 and 7
     PWM1_3_GENB_R &= ~(1<<6);
-    PWM1_3_GENB_R |= (1<<7);
+    PWM1_3_GENB_R |= (1<<7); //Writing the value of 0x2 to bits 6 and 7
+    PWM1_2_GENB_R |= (1<<2) | (1<<3);
     PWM1_2_GENB_R &= ~(1<<6);
     PWM1_2_GENB_R |= (1<<7);
 
@@ -96,62 +96,17 @@ int main()
         PWM_CH5_ON();
         for(i = 1600; i > 0; i--)
         {
-            PWM1_2_CMPA_R = i;
-            delay(1000);
-            PWM_CH6_ON();
+            PWM1_2_LOAD_R = i;
+            delay(100);
         }
-
-
-
-        delay(10000);
+        delay(1000000);
         for(i = 0; i < 1600; i++)
         {
-            PWM1_2_CMPA_R = i;
-            PWM1_3_CMPA_R = i;
-            delay(1000);
+            PWM1_2_LOAD_R = i;
+            delay(100);
         }
-
-
-        delay(10000);
+        delay(1000000);
         PWM_CH5_OFF();
-        for(i = 1600; i > 0; i--)
-        {
-            PWM1_3_CMPA_R = i;
-            delay(1000);
-            PWM_CH7_ON();
-        }
-
-
-
-        delay(10000);
-        PWM_CH6_OFF();
-        PWM_CH5_ON();
-        for(i = 0; i < 1600; i++)
-        {
-            PWM1_3_CMPA_R = i;
-            PWM1_2_CMPA_R = i;
-            delay(1000);
-        }
-
-
-        delay(10000);
-        PWM_CH7_ON();
-        for(i = 1600; i > 0; i--)
-        {
-            PWM1_3_CMPA_R = i;
-            PWM1_2_CMPA_R = i;
-            delay(1000);
-            PWM_CH6_ON();
-        }
-        delay(10000);
-        for(i = 0; i < 1600; i++)
-        {
-            PWM1_3_CMPA_R = i;
-            PWM1_2_CMPA_R = i;
-            delay(1000);
-        }
-        delay(10000);
-        PWM_CH7_OFF();
     }
 }
 
