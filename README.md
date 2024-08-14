@@ -1,3 +1,3 @@
 # Led-Brightness
 
-Control a led brightness using PWM by giving input through UART
+Control LEDs brightness using PWM
