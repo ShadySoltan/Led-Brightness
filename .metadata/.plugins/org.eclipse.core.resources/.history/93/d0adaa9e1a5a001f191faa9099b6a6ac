@@ -1,0 +1,232 @@
+#include "tm4c123gh6pm.h"
+
+void delay(long d)
+{
+    while(d--);
+}
+
+PWM1_CH567_INIT(void)
+{
+    //Enable PWM1 module clock
+    SYSCTL_RCGCPWM_R |= (1<<1);
+
+    //Enable Clock for PORTF
+    SYSCTL_RCGCGPIO_R |= (1<<5);
+    while((SYSCTL_PRGPIO_R & 0x20) == 0);
+
+    //Use SystemClock for PWM 16MHz
+    SYSCTL_RCC_R &= ~(1<<20);
+
+    //Configure Three Pins PF1, PF2, and PF3 as PWM pins
+    GPIO_PORTF_AFSEL_R |= (1<<1) | (1<<2) | (1<<3);
+    GPIO_PORTF_PCTL_R = 0x00005550;
+    GPIO_PORTF_DEN_R |= (1<<1) | (1<<2) | (1<<3);
+
+    //Configure PWM Module1 Generators 2 and 3
+    //Disable the PWM channels 5 6 7 before configuration
+    PWM1_3_CTL_R &= ~(1<<0);
+    PWM1_2_CTL_R &= ~(1<<0);
+    //Select DownCount mode
+    PWM1_3_CTL_R &= ~(1<<1);
+    PWM1_2_CTL_R &= ~(1<<1);
+    //Configure the load value to be 1600 meaning that the frequency will be 10KHz
+    PWM1_3_LOAD_R = 1600;
+    PWM1_2_LOAD_R = 1600;
+    //Set the DutyCycle
+    PWM1_3_CMPA_R = 0;
+    PWM1_2_CMPA_R = 0;
+
+    //When the PWM timer starts counting from 1600 it drives the PF1 PF2 PF3 to high
+    PWM1_3_GENA_R |= (1<<2) | (1<<3);
+    PWM1_3_GENB_R |= (1<<2) | (1<<3);
+    PWM1_2_GENB_R |= (1<<2) | (1<<3);
+
+    //When the counter reaches the compartorA it will drive the pins to low
+    PWM1_3_GENA_R &= ~(1<<6);
+    PWM1_3_GENA_R |= (1<<7);
+    PWM1_3_GENB_R &= ~(1<<6);
+    PWM1_3_GENB_R |= (1<<7);
+    PWM1_2_GENB_R &= ~(1<<6);
+    PWM1_2_GENB_R |= (1<<7);
+
+    //Enable the two generators
+    PWM1_2_CTL_R |= (1<<0);
+    PWM1_3_CTL_R |= (1<<0);
+}
+
+void PWM_CH5_ON(void)
+{
+    PWM1_ENABLE_R |= (1<<5);
+}
+
+void PWM_CH5_OFF(void)
+{
+    PWM1_ENABLE_R &= ~(1<<5);
+}
+
+
+void PWM_CH6_ON(void)
+{
+    PWM1_ENABLE_R |= (1<<6);
+}
+
+void PWM_CH6_OFF(void)
+{
+    PWM1_ENABLE_R &= ~(1<<6);
+}
+
+
+void PWM_CH7_ON(void)
+{
+    PWM1_ENABLE_R |= (1<<7);
+}
+
+void PWM_CH7_OFF(void)
+{
+    PWM1_ENABLE_R &= ~(1<<7);
+}
+
+void HC05_Init(void)
+{
+    SYSCTL_RCGCUART_R |= 0x20;
+    while(!(SYSCTL_PRUART_R & 0x20));
+
+    SYSCTL_RCGCGPIO_R |= 0x10;
+    while(!(SYSCTL_RCGCGPIO_R&0x10));
+
+    UART5_CTL_R = 0;
+
+    UART5_IBRD_R = 104;
+    UART5_FBRD_R = 11;
+    UART5_CC_R = 0;
+    UART5_LCRH_R = 0x60;
+
+    UART5_CTL_R = 0x301;
+
+    GPIO_PORTE_AFSEL_R = 0x30;
+    GPIO_PORTE_AMSEL_R = 0;
+    GPIO_PORTE_PCTL_R = 0x00110000;
+    GPIO_PORTE_DEN_R = 0x30;
+}
+
+void UART5_SendByte(uint8 data)
+{
+    while(!(UART5_FR_R & 0x00000080));
+    UART5_DR_R = data;
+}
+
+uint8 UART5_ReceiveByte(void)
+{
+    while(UART5_FR_R & 0x00000010);
+    return UART5_DR_R;
+}
+
+void UART5_ReceiveString(uint8 *pData)
+{
+    uint32 uCounter = 0;
+
+    pData[uCounter] = UART5_ReceiveByte();
+
+    while(pData[uCounter] != '#')
+    {
+        uCounter++;
+        pData[uCounter] = UART5_ReceiveByte();
+    }
+    pData[uCounter] = '\0';
+}
+
+void UART5_SendString(const uint8 *pData)
+{
+    uint32 uCounter = 0;
+
+    while(pData[uCounter] != '\0')
+    {
+        UART5_SendByte(pData[uCounter]);
+        uCounter++;
+    }
+}
+
+
+void APP1(void)
+{
+        uint16 i;
+        PWM1_CH567_INIT();
+        while(1)
+        {
+            PWM_CH5_ON();
+            for(i = 1600; i > 0; i--)
+            {
+                PWM1_2_CMPA_R = i;
+                delay(1000);
+                PWM_CH6_ON();
+            }
+
+
+
+            delay(10000);
+            for(i = 0; i < 1600; i++)
+            {
+                PWM1_2_CMPA_R = i;
+                PWM1_3_CMPA_R = i;
+                delay(1000);
+            }
+
+
+            delay(10000);
+            PWM_CH5_OFF();
+            for(i = 1600; i > 0; i--)
+            {
+                PWM1_3_CMPA_R = i;
+                delay(1000);
+                PWM_CH7_ON();
+            }
+
+
+
+            delay(10000);
+            PWM_CH6_OFF();
+            PWM_CH5_ON();
+            for(i = 0; i < 1600; i++)
+            {
+                PWM1_3_CMPA_R = i;
+                PWM1_2_CMPA_R = i;
+                delay(1000);
+            }
+
+
+            delay(10000);
+            PWM_CH7_ON();
+            for(i = 1600; i > 0; i--)
+            {
+                PWM1_3_CMPA_R = i;
+                PWM1_2_CMPA_R = i;
+                delay(1000);
+                PWM_CH6_ON();
+            }
+            delay(10000);
+            for(i = 0; i < 1600; i++)
+            {
+                PWM1_3_CMPA_R = i;
+                PWM1_2_CMPA_R = i;
+                delay(1000);
+            }
+            delay(10000);
+            PWM_CH7_OFF();
+        }
+}
+
+
+int main()
+{
+    uint8 string[20];
+    HC05_Init();
+    UART5_SendString("\nSend me data: ");
+    UART5_ReceiveString(string);
+    UART5_SendString("I received value of: ");
+    UART5_SendString(string);
+    while(1)
+    {
+
+    }
+}
+
