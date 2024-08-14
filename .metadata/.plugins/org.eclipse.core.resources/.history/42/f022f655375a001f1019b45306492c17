@@ -86,8 +86,6 @@ void PWM_CH7_OFF(void)
     PWM1_ENABLE_R &= ~(1<<7);
 }
 
-uint16 i;
-
 void Run_Red(void)
 {
     PWM_CH5_ON();
@@ -239,16 +237,12 @@ void Run_MIX4(void)
 
 int main()
 {
-    PWM1_CH567_INIT();
-    while(1)
-    {
-        Run_Red();
-        Run_Blue();
-        Run_Green();
-        Run_MIX1();
-        Run_MIX2();
-        Run_MIX3();
-        Run_MIX4();
-    }
+    Run_Red();
+    Run_Blue();
+    Run_Green();
+    Run_MIX1();
+    Run_MIX2();
+    Run_MIX3();
+    Run_MIX4();
 }
 

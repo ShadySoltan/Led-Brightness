@@ -86,8 +86,6 @@ void PWM_CH7_OFF(void)
     PWM1_ENABLE_R &= ~(1<<7);
 }
 
-uint16 i;
-
 void Run_Red(void)
 {
     PWM_CH5_ON();
@@ -145,7 +143,7 @@ void Run_Blue(void)
     PWM_CH6_OFF();
 }
 
-void Run_MIX1(void)
+void Run_RedBlue(void)
 {
     PWM_CH5_ON();
     PWM_CH6_ON();
@@ -168,7 +166,7 @@ void Run_MIX1(void)
     PWM_CH6_OFF();
 }
 
-void Run_MIX2(void)
+void Run_RedGreen(void)
 {
     PWM_CH5_ON();
     PWM_CH7_ON();
@@ -188,67 +186,133 @@ void Run_MIX2(void)
         delay(1000);
     }
     PWM_CH5_OFF();
-    PWM_CH7_OFF();
-}
-
-void Run_MIX3(void)
-{
-    PWM_CH6_ON();
-    PWM_CH7_ON();
-    for(i = 1600; i > 0; i--)
-    {
-        PWM1_3_CMPA_R = i;
-        delay(1000);
-    }
-
-
-    delay(10000);
-    for(i = 0; i < 1600; i++)
-    {
-        PWM1_3_CMPA_R = i;
-        delay(1000);
-    }
-    PWM_CH6_OFF();
-    PWM_CH7_OFF();
-}
-
-void Run_MIX4(void)
-{
-    PWM_CH5_ON();
-    PWM_CH6_ON();
-    PWM_CH7_ON();
-    for(i = 1600; i > 0; i--)
-    {
-        PWM1_2_CMPA_R = i;
-        PWM1_3_CMPA_R = i;
-        delay(1000);
-    }
-
-
-    delay(10000);
-    for(i = 0; i < 1600; i++)
-    {
-        PWM1_2_CMPA_R = i;
-        PWM1_3_CMPA_R = i;
-        delay(1000);
-    }
-    PWM_CH5_OFF();
-    PWM_CH6_OFF();
     PWM_CH7_OFF();
 }
 
 int main()
 {
+    uint16 i;
     PWM1_CH567_INIT();
     while(1)
     {
-        Run_Red();
-        Run_Blue();
-        Run_Green();
-        Run_MIX1();
-        Run_MIX2();
-        Run_MIX3();
-        Run_MIX4();
+        PWM_CH5_ON();
+        for(i = 1600; i > 0; i--)
+        {
+            PWM1_2_CMPA_R = i;
+            delay(1000);
+        }
+
+
+        delay(10000);
+        for(i = 0; i < 1600; i++)
+        {
+            PWM1_2_CMPA_R = i;
+            delay(1000);
+            PWM_CH6_ON();
+        }
+
+
+        delay(10000);
+        for(i = 1600; i > 0; i--)
+        {
+            PWM1_2_CMPA_R = i;
+            PWM1_3_CMPA_R = i;
+            delay(1000);
+        }
+
+
+        delay(10000);
+        for(i = 0; i < 1600; i++)
+        {
+            PWM1_2_CMPA_R = i;
+            PWM1_3_CMPA_R = i;
+            delay(1000);
+            PWM_CH5_OFF();
+            PWM_CH7_ON();
+        }
+
+        delay(10000);
+        for(i = 1600; i > 0; i--)
+        {
+            PWM1_3_CMPA_R = i;
+            delay(1000);
+        }
+
+        delay(10000);
+        for(i = 0; i < 1600; i++)
+        {
+            PWM1_3_CMPA_R = i;
+            delay(1000);
+            PWM_CH7_OFF();
+        }
+
+        delay(10000);
+        for(i = 1600; i > 0; i--)
+        {
+            PWM1_3_CMPA_R = i;
+            delay(1000);
+        }
+
+        delay(10000);
+        for(i = 0; i < 1600; i++)
+        {
+            PWM1_3_CMPA_R = i;
+            delay(1000);
+            PWM_CH6_OFF();
+            PWM_CH7_ON();
+        }
+
+        delay(10000);
+        for(i = 1600; i > 0; i--)
+        {
+            PWM1_3_CMPA_R = i;
+            delay(1000);
+        }
+
+        delay(10000);
+        for(i = 0; i < 1600; i++)
+        {
+            PWM1_3_CMPA_R = i;
+            delay(1000);
+            PWM_CH7_OFF();
+            PWM_CH5_ON();
+        }
+
+        delay(10000);
+        for(i = 1600; i > 0; i--)
+        {
+            PWM1_2_CMPA_R = i;
+            delay(1000);
+        }
+
+        delay(10000);
+        for(i = 0; i < 1600; i++)
+        {
+            PWM1_2_CMPA_R = i;
+            delay(1000);
+            PWM_CH6_ON();
+            PWM_CH7_ON();
+        }
+
+        delay(10000);
+        for(i = 1600; i > 0; i--)
+        {
+            PWM1_2_CMPA_R = i;
+            PWM1_3_CMPA_R = i;
+            delay(1000);
+        }
+
+
+        delay(10000);
+        for(i = 0; i < 1600; i++)
+        {
+            PWM1_2_CMPA_R = i;
+            PWM1_3_CMPA_R = i;
+            delay(1000);
+            PWM_CH6_OFF();
+            PWM_CH7_OFF();
+            PWM_CH5_OFF();
+        }
     }
 }
 
