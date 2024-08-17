@@ -4789,3 +4789,19 @@ Finished building target: "Led Brightness.out"
  
 
 **** Build Finished ****
+
+**** Build of configuration Debug for project Led Brightness ****
+
+"C:\\ti\\ccs1260\\ccs\\utils\\bin\\gmake" -k -j 4 all -O 
+ 
+gmake[1]: 'Led Brightness.out' is up to date.
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project Led Brightness ****
+
+"C:\\ti\\ccs1260\\ccs\\utils\\bin\\gmake" -k -j 4 all -O 
+ 
+gmake[1]: 'Led Brightness.out' is up to date.
+
+**** Build Finished ****
